@@ -1,15 +1,14 @@
 import { LoaderFunctionArgs, redirect } from "react-router-dom";
+import { isAuthenticated } from "../../auth";
 
-export function rootLoader({ request: _ }: LoaderFunctionArgs) {
-  // TODO: implement authentication
-  const isAuthenticated = false;
-
-  const pathname = new URL(_.url).pathname;
-  const redirectTo = isAuthenticated ? "/home" : "/login";
+export function rootLoader({ request }: LoaderFunctionArgs) {
+  const authenticated = isAuthenticated();
+  const pathname = new URL(request.url).pathname;
+  const redirectTo = authenticated ? "/home" : "/login";
 
   if (pathname === redirectTo) {
     return null;
   }
 
-  return isAuthenticated ? null : redirect(redirectTo);
+  return authenticated ? null : redirect(redirectTo);
 }

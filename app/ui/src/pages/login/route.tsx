@@ -1,4 +1,4 @@
-import { Form } from "react-router-dom";
+import { Form, useActionData } from "react-router-dom";
 import { ApiStatus, Page } from "../../components";
 import {
   Button,
@@ -12,6 +12,9 @@ import {
 } from "@nextui-org/react";
 
 export function LoginPage() {
+  const actionData = useActionData() as { ok?: boolean; message?: string } | undefined;
+  const errorMessage = actionData && !actionData.ok ? actionData.message : null;
+
   return (
     <Page className="justify-center items-center">
       <Card as={Form} className="w-1/2 lg:w-1/3" method="POST">
@@ -21,9 +24,14 @@ export function LoginPage() {
           <ApiStatus />
         </CardHeader>
         <CardBody>
-          <Input name="username" type="text" label="Username" required/>
+          {errorMessage && (
+            <p className="text-danger text-sm mb-2" role="alert">
+              {errorMessage}
+            </p>
+          )}
+          <Input name="username" type="text" label="Username" required autoComplete="username" />
           <Spacer y={4} />
-          <Input name="password" type="password" label="Password" required />
+          <Input name="password" type="password" label="Password" required autoComplete="current-password" />
         </CardBody>
         <CardFooter className="justify-center">
           <Button type="submit">Login</Button>

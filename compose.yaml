@@ -7,8 +7,16 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./:/app
+    ports:
+      - "5001:5000"   # API en 5001 (5000 suele estar ocupado en Mac por AirPlay)
+      - "5173:5173"
     environment:
       - NODE_ENV=development
+      - VITE_API_URL=http://127.0.0.1:5001/api
+      # API debe escuchar en todas las interfaces para que el navegador (host) pueda conectarse vía puerto 5001
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    depends_on:
+      - sqlserver
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
